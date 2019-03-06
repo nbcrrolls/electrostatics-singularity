@@ -7,10 +7,10 @@
 # Description:      Docker image for BrownDye, APBS and PDB2PQR
 # Website:          http://browndye.ucsd.edu
 # Tags:             Electrostatics|Brownian Dynamics|Solvation
-# Build command:    singularity build electrostatics.sif Singularity
-# Run command:      singularity shell electrostatics.sif
-# Run command:      singularity run --app apbs electrostatics.sif
-# Run command:      singularity run --app pdb2pqr electrostatics.sif
+# Build command:    singularity build electrostatics.simg Singularity
+# Run command:      singularity shell electrostatics.simg
+# Run command:      singularity run --app apbs electrostatics.simg
+# Run command:      singularity run --app pdb2pqr electrostatics.simg
 ################################################################################# 
 
 Bootstrap: docker
@@ -72,11 +72,11 @@ rm -rf /var/lib/apt/lists/*
 #/tmp/* /var/tmp/*
 
 # add apbs
-wget --no-check-certificate ${APBS_URL}/${APBS_PKG} -O - | tar xzf - -C /opt
+wget -q --no-check-certificate ${APBS_URL}/${APBS_PKG} -O - | tar xzf - -C /opt
 ln -s /opt/APBS-${APBS_VERSION}-linux64 /opt/apbs
 
 # add pdb2pqr
-wget --no-check-certificate ${PDB2PQR_URL}/${PDB2PQR_PKG} -O - | tar xzf - -C /opt
+wget -q --no-check-certificate ${PDB2PQR_URL}/${PDB2PQR_PKG} -O - | tar xzf - -C /opt
 ln -s /opt/pdb2pqr-linux-bin64-${PDB2PQR_VERSION} /opt/pdb2pqr
 
 %environment
@@ -97,7 +97,7 @@ For instructions on use see http://www.poissonboltzmann.org/
 apbs is installed in /opt/apbs
     
 %apprun apbs
-/opt/apbs/bin/apbs
+/opt/apbs/bin/apbs "$@"
 
 %apphelp pdb2pqr
 pdb2pqr version 2.1.0
@@ -105,7 +105,7 @@ For instructions on use see http://www.poissonboltzmann.org/
 pdb2pqr is installed in /opt/pdb2pqr
 
 %apprun pdb2pqr
-/opt/pdb2pqr/pdb2pqr
+/opt/pdb2pqr/pdb2pqr "$@"
 
 %apphelp nam_simulation
 BrownDye version 2.0 (13 Feb 2019)
@@ -113,32 +113,32 @@ For instructions on use see https://browndye.ucsd.edu
 All BrowDye programs are installed in /opt/browndye/bin
 
 %apprun nam_simulation
-/opt/browndye/bin/nam_simulation
+/opt/browndye/bin/nam_simulation "$@"
 
 %apphelp pqr2xml
 BrownDye version 2.0 (13 Feb 2019)
 For instructions on use see https://browndye.ucsd.edu
 
 %apprun pqr2xml
-/opt/browndye/bin/pqr2xml
+/opt/browndye/bin/pqr2xml "$@"
 
 %apphelp make_rxn_pairs
 BrownDye version 2.0 (13 Feb 2019)
 For instructions on use see https://browndye.ucsd.edu
 
 %apprun make_rxn_pairs
-/opt/browndye/bin/make_rxn_pairs
+/opt/browndye/bin/make_rxn_pairs "$@"
 
 %apphelp we_simulation
 BrownDye version 2.0 (13 Feb 2019)
 For instructions on use see https://browndye.ucsd.edu
 
 %apprun we_simulation
-/opt/browndye/bin/we_simulation
+/opt/browndye/bin/we_simulation "$@"
 
 %apphelp xyz_trajectory
 BrownDye version 2.0 (13 Feb 2019)
 For instructions on use see https://browndye.ucsd.edu
 
 %apprun xyz_trajectory
-/opt/browndye/bin/xyz_trajectory
+/opt/browndye/bin/xyz_trajectory "$@"
