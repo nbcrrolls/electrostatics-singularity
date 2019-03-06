@@ -8,9 +8,11 @@
 # Website:          http://browndye.ucsd.edu
 # Tags:             Electrostatics|Brownian Dynamics|Solvation
 # Build command:    singularity build electrostatics.simg Singularity
-# Run command:      singularity shell electrostatics.simg
-# Run command:      singularity run --app apbs electrostatics.simg
-# Run command:      singularity run --app pdb2pqr electrostatics.simg
+# Pull command:     singularity pull shub://nbcrrolls/electrostatics-singularity
+# Run command:      singularity shell nbcrrolls-electrostatics-singularity-master-latest.simg
+# Run command:      singularity exec nbcrrolls-electrostatics-singularity-master-latest.simg apbs input.in
+# Run command:      singularity run --app apbs electrostatics.simg arguments
+# Run command:      singularity run --app pdb2pqr electrostatics.simg arguments
 ################################################################################# 
 
 Bootstrap: docker
