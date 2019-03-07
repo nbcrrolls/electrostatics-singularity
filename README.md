@@ -2,6 +2,8 @@
 
 This singularity image contains a complete software environment for running [BrownDye](http://browndye.ucsd.edu/) simulations. It also includes [PDB2PQR](http://www.poissonboltzmann.org/) and [APBS](http://www.poissonboltzmann.org/).
 
+Please [register](http://eepurl.com/by4eQr) your use of APBS and PDB2PQR.
+
 ## Using the container
 
 Pull the singularity image:
@@ -9,7 +11,7 @@ Pull the singularity image:
 singularity pull shub://nbcrrolls/electrostatics-singularity
 ```
 
-Start shell in the container:
+Start bash shell in the container:
 ```
 singularity shell nbcrrolls-electrostatics-singularity-master-latest.simg
 ```

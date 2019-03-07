@@ -10,9 +10,9 @@
 # Build command:    singularity build electrostatics.simg Singularity
 # Pull command:     singularity pull shub://nbcrrolls/electrostatics-singularity
 # Run command:      singularity shell nbcrrolls-electrostatics-singularity-master-latest.simg
-# Run command:      singularity exec nbcrrolls-electrostatics-singularity-master-latest.simg apbs input.in
-# Run command:      singularity run --app apbs electrostatics.simg arguments
-# Run command:      singularity run --app pdb2pqr electrostatics.simg arguments
+# Run command:      singularity exec [image name] apbs input.in
+# Run command:      singularity run --app apbs [image name] arguments
+# Run command:      singularity run --app pdb2pqr [image name] arguments
 ################################################################################# 
 
 Bootstrap: docker
@@ -37,7 +37,7 @@ BrownDye v2.0 (13 Feb 2019) - https://browndye.ucsd.edu/
 
 Please register your use of APBS and PDB2PQR at http://eepurl.com/by4eQr
 
-To list all available applications do "singularity apps electrostatics.sif"
+To list all available applications do "singularity apps [image name]"
 
 EOF
 
