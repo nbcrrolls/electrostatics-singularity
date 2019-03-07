@@ -57,4 +57,9 @@ or
 singularity run --app apbs nbcrrolls-electrostatics-singularity-master-latest.simg input.in
 ```
 
+
+This Singularity image is hosted on Singularity Hub: [![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/2497)
+
+
+
 ###### This project is supported by [NBCR](http://nbcr.ucsd.edu).
