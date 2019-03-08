@@ -1,6 +1,6 @@
 # Singularity container for molecular electrostatic calculations using PDB2PQR/APBS and Brownian dynamics with BrownDye.
 
-This singularity image contains a complete software environment for running [BrownDye](http://browndye.ucsd.edu/) simulations. It also includes [PDB2PQR](http://www.poissonboltzmann.org/) and [APBS](http://www.poissonboltzmann.org/).
+This singularity image contains a complete software environment for running [BrownDye (version 1 and 2)](http://browndye.ucsd.edu/) simulations. It also includes [PDB2PQR](http://www.poissonboltzmann.org/) and [APBS](http://www.poissonboltzmann.org/).
 
 Please [register](http://eepurl.com/by4eQr) your use of APBS and PDB2PQR.
 
@@ -16,10 +16,20 @@ Start bash shell in the container:
 singularity shell nbcrrolls-electrostatics-singularity-master-latest.simg
 ```
 
-Now the container is running and we can start a BrownDye job (using the Thrombin example):
+Now the container is running and we can start a BrownDye2 job (using the Thrombin example):
 
 ```
-cp -a $BD_PATH/thrombin-example .
+cp -ai $BD2_PATH/examples/thrombin .
+cd thrombin
+sed -i 's/-PE0//g' *
+make all
+```
+
+And if you want to use BrownDye version 1:
+
+```
+export PATH=$BD1_PATH/bin:$PATH
+cp -ai $BD1_PATH/thrombin-example .
 cd thrombin-example
 sed -i 's/-PE0//g' *
 make all
