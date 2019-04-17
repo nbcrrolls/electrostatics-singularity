@@ -4,6 +4,8 @@ This singularity image contains a complete software environment for running [Bro
 
 Please [register](http://eepurl.com/by4eQr) your use of APBS and PDB2PQR.
 
+The image has been verified to work on XSEDE [comet](https://portal.xsede.org/sdsc-comet) and [TSCC](https://www.sdsc.edu/support/user_guides/tscc-quick-start.html) shared cluster at SDSC. It will automatically bind `/cvmfs` `/oasis` `/projects` `/scratch` directories, if available on the host.
+
 ## Using the container
 
 Pull the singularity image:
