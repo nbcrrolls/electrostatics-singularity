@@ -1,9 +1,9 @@
 ################################################################################# 
 # Singularity Definition File
 # 
-# Version:          2.0
+# Version:          2.1
 # Software:         Molecular electrostatics singularity image
-# Software Version: 2019.4.22
+# Software Version: 2019.4.23
 # Description:      Docker image for BrownDye, APBS and PDB2PQR
 # Website:          https://browndye.ucsd.edu
 # Github:           https://github.com/nbcrrolls/electrostatics-singularity
@@ -43,7 +43,7 @@ OSVersion: xenial # 16.04
     MODIFYING_AUTHOR_NAME Marty Kandes
     MODIFYING_AUTHOR_EMAIL mkandes@sdsc.edu
 
-    LAST_UPDATED 20190422
+    LAST_UPDATED 20190423
 
 %help
 
@@ -76,7 +76,8 @@ OSVersion: xenial # 16.04
 #fi
 
 %post -c /bin/bash
-    export LC_ALL=C
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
     set -o errexit
     #
     APBS_VERSION=1.5
@@ -103,6 +104,8 @@ OSVersion: xenial # 16.04
 
     DEBIAN_FRONTEND=noninteractive
     apt-get -y install ubuntu-standard
+    apt-get -y install software-properties-common
+    add-apt-repository universe
     # Upgrade all packages to their latest versions
     apt-get -y update && apt-get -y upgrade
     apt-get -y install build-essential
@@ -114,6 +117,8 @@ OSVersion: xenial # 16.04
     apt-get -y install liblapack-dev
     # works with Ubuntu 16.04 (Xenial)
     apt-get -y install libreadline6
+    # needs 'universe' repo for modules
+    apt-get -y install environment-modules
 
     cd /tmp
     wget -qO - ${OCAML_URL}/${OCAML_PKG}.tar.gz | tar xzf -
@@ -150,8 +155,8 @@ OSVersion: xenial # 16.04
     #apt-get -y purge ocaml
     apt-get -y purge libexpat-dev
     apt-get -y purge libboost-dev
-    apt-get -y clean
-    apt-get -y autoremove
+    apt-get -y purge liblapack-dev
+    apt-get -y clean && apt-get -y autoremove
     rm -rf /var/lib/apt/lists/*
 
     # add apbs
@@ -162,13 +167,32 @@ OSVersion: xenial # 16.04
     wget -qO- --no-check-certificate ${PDB2PQR_URL}/${PDB2PQR_PKG}.tar.gz | tar xzf - -C /opt
     ln -s /opt/${PDB2PQR_PKG} /opt/pdb2pqr
 
+    # add modules to /usr/share/modules/modulefiles
+    ln -s /usr/share/modules /usr/share/Modules
+    MODULE_PATH=/usr/share/modules/modulefiles
+    echo "#%Module1.0" > ${MODULE_PATH}/browndye1
+    echo "conflict browndye2" >> ${MODULE_PATH}/browndye1
+    echo "prepend-path PATH /opt/browndye/bin" >> ${MODULE_PATH}/browndye1
+
+    echo "#%Module1.0" > ${MODULE_PATH}/browndye2
+    echo "conflict browndye1" >> ${MODULE_PATH}/browndye2
+    echo "prepend-path PATH /opt/browndye2/bin" >> ${MODULE_PATH}/browndye2
+
+    # stupid ubuntu/dash
+    rm /bin/sh
+    ln -s /bin/bash /bin/sh
+
     # Make filesystem mount points
     mkdir /cvmfs /oasis /projects /scratch
 
 %environment
 
     # Set system locale
-    export LC_ALL=C
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    . /etc/profile.d/modules.sh
+    export -f module
 
     # Set APBS, PDB2PQR, and BrownDye environment variables
     export APBS_VERSION=1.5
@@ -183,13 +207,15 @@ OSVersion: xenial # 16.04
     export BD2_VERSION="2.0-11_Mar_2019"
     export BD2_PATH=/opt/browndye2
 
-    export PATH=${APBS_PATH}/bin:${PDB2PQR_PATH}:${BD2_PATH}/bin:$PATH
+    export PATH=${APBS_PATH}/bin:${PDB2PQR_PATH}:${PATH}
     export LD_LIBRARY_PATH=${APBS_PATH}/lib
 
 %apphelp apbs
 
     apbs version 1.5
     For instructions on use see http://www.poissonboltzmann.org/
+    Please register your use of APBS and PDB2PQR at http://eepurl.com/by4eQr
+
     apbs is installed in /opt/apbs
     
 %apprun apbs
@@ -200,6 +226,7 @@ OSVersion: xenial # 16.04
 
     pdb2pqr version 2.1.0
     For instructions on use see http://www.poissonboltzmann.org/
+
     pdb2pqr is installed in /opt/pdb2pqr
 
 %apprun pdb2pqr
@@ -208,9 +235,9 @@ OSVersion: xenial # 16.04
 
 %apphelp nam_simulation
 
-    BrownDye version 2.0
+    BrownDye version 1 and 2
     For instructions on use see https://browndye.ucsd.edu
-    All BrowDye programs are installed in /opt/browndye/bin
+    All BrowDye programs are installed in /opt/browndye{1:2}/bin
 
 %apprun nam_simulation
 
@@ -218,8 +245,9 @@ OSVersion: xenial # 16.04
 
 %apphelp we_simulation
 
-   BrownDye version 2.0
+   BrownDye version 1 and 2
    For instructions on use see https://browndye.ucsd.edu
+   All BrowDye programs are installed in /opt/browndye{1:2}/bin
 
 %apprun we_simulation
 

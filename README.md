@@ -21,23 +21,28 @@ singularity shell nbcrrolls-electrostatics-singularity-master-latest.simg
 Now the container is running and we can start a BrownDye2 job (using the Thrombin example):
 
 ```
+module load browndye2
 cp -ai $BD2_PATH/examples/thrombin .
 cd thrombin
 sed -i 's/-PE0//g' *
-make all
+sed -i 's/<n_trajectories> 10000 /<n_trajectories> 1000 /' t_m_simulation.xml.bak
+make all # takes about min to run
+module unload browndye2
 ```
 
 And if you want to use BrownDye version 1:
 
 ```
-export PATH=$BD1_PATH/bin:$PATH
+module load browndye1
 cp -ai $BD1_PATH/thrombin-example .
 cd thrombin-example
 sed -i 's/-PE0//g' *
+sed -i 's/<n-trajectories> 10000 /<n-trajectories> 1000 /' input.xml.bak # limit the number of calculated trajectories
 make all
 bd_top input.xml
-nam_simulation t-m-simulation.xml # this takes about 20min to run
+nam_simulation t-m-simulation.xml # this takes about 3 min to run
 cat results.xml
+module unload browndye1
 ```
 After we are finished we can quit the container:
 
@@ -50,12 +55,9 @@ To list available applications:
 ```
 $ singularity apps nbcrrolls-electrostatics-singularity-master-latest.simg 
 apbs
-make_rxn_pairs
-nam_simulation
 pdb2pqr
-pqr2xml
+nam_simulation
 we_simulation
-xyz_trajectory
 ```
 
 To run, for example, apbs calculation:
